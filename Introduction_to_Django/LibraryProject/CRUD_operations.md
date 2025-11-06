@@ -13,8 +13,8 @@ python manage.py shell
 # Create a Book instance
 from library.models import Book
 
-x = Book(title="1984", author="George Orwell", publication_year=1949)
-x.save()
+book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
+
 x
 ```
 

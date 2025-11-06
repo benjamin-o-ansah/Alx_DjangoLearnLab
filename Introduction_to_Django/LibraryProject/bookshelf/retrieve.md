@@ -1,17 +1,8 @@
-# Retrieve Operation
-
 ```python
-# Open Django shell
-python manage.py shell
+# Retrieve the created Book instance
+book = Book.objects.get(title="1984")
+print(book.title, book.author, book.publication_year)
 
-# Retrieve and display all attributes of the created book
-from bookshelf.models import Book
-
-Book.objects.all().values()
-
-```
-
-```python
-# Expected Output
-<Book: 1984 by George Orwell (1949)>
+# Expected Output:
+# 1984 George Orwell 1949
 ```
