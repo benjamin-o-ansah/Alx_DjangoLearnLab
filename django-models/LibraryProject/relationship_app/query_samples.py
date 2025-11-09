@@ -25,7 +25,7 @@ def insert_sample_data():
     Librarian.objects.create(name="Bob", library=lib2)
 
 def get_books_by_author(author_name):
-    author = Author.objects.get(name=author_name)
+    author = Book.objects.filter(author=author_name)
     books = author.books.all().values()
     return books
 
