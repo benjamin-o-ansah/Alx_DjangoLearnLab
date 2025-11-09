@@ -1,13 +1,13 @@
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.http import HttpResponse
 from .query_samples import insert_sample_data, get_all_books, get_all_libraries, get_all_libranians
 from django.template import loader
 from .models import Library,Librarian,Author,Book
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib import messages
+
 
 def display_all(request):
     insert_sample_data()
