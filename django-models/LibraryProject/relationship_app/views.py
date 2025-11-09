@@ -2,7 +2,7 @@
 from django.http import HttpResponse
 from .query_samples import insert_sample_data, get_all_books, get_all_libraries, get_all_libranians
 from django.template import loader
-from .models import Book, Library,Librarian,Author
+from .models import Library,Librarian,Author,Book
 from django.views.generic import DetailView
 from django.shortcuts import render, get_object_or_404
 
