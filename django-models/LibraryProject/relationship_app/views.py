@@ -25,7 +25,7 @@ def display_all(request):
 
 def displayAllBooks(request):
     books = Book.objects.all().values()
-    template = loader.get_template('list_books.html')
+    template = loader.get_template('/relationship_app/list_books.html')
     context = {
         'books': books,
     }   
@@ -34,7 +34,7 @@ def displayAllBooks(request):
 class LibraryDetailView(DetailView):
     """Display details for a specific library and its books."""
     model = Library
-    template_name = 'relationship_app/templates/library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
     def get_context_data(self, **kwargs):
