@@ -23,7 +23,7 @@ def display_all(request):
     }
     return HttpResponse(template.render(context, request))
 
-def displayAllBooks(request):
+def list_books(request):
     books = Book.objects.all().values()
     template = loader.get_template('/relationship_app/list_books.html')
     context = {
