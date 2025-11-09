@@ -25,20 +25,21 @@ def insert_sample_data():
     Librarian.objects.create(name="Bob", library=lib2)
 
 def get_books_by_author(author_name):
-    author = Book.objects.filter(author=author_name)
-    books = author.books.all().values()
-    return books
+    author = Author.objects.get(name=author_name)
+    books = Book.objects.filter(author=author)
+    return author,books
+   
 
 # 2️⃣ List all books in a specific library
 def get_books_in_library(library_name):
     library = Library.objects.get(name=library_name)
     books = library.books.all().values()
-    return books
+    
     
 # 3️⃣ Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
     library = Library.objects.get(name=library_name)
-    return library
+   
 
 def get_all_books():
     books = Author.objects.all().values()
