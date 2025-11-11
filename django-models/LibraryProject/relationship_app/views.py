@@ -34,7 +34,7 @@ def list_books(request):
     context = {
         'books': books,
     }   
-    return render(request,'list_books.html',context)
+    return render(request,'relationship_app/list_books.html',context)
 
 class LibraryDetailView(DetailView):
     """Display details for a specific library and its books."""
@@ -45,7 +45,7 @@ class LibraryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         # Optional: prefetch related books for performance
         context['books'] = self.context_object_name.object.books.select_related('author').all()
-        template = loader.get_template('library_detail.html')
+        template = loader.get_template('relationship_app/library_detail.html')
         return HttpResponse(template.render(context,self.request))
 
 def register_view(request):
