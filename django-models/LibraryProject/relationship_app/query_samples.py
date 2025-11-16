@@ -17,8 +17,8 @@ def insert_sample_data():
     lib2 = Library.objects.create(name="Community Library")
 
     # Add books to libraries
-    lib1.books.add(b1, b3)
-    lib2.books.add(b2)
+    lib1.books_collection.add(b1, b3)
+    lib2.books_collection.add(b2)
 
     # Create librarians
     Librarian.objects.create(name="Alice", library=lib1)
@@ -40,8 +40,11 @@ def get_books_in_library(library_name):
 def get_librarian_for_library(library_name):
     library = Librarian.objects.get(library=library_name)
    
+def getAllBooks():
+    books = Book.objects.all().values()
+    return books
 
-def get_all_books():
+def get_all_authors():
     books = Author.objects.all().values()
     return books
 

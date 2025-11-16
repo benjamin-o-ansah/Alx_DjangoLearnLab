@@ -4,9 +4,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.http import HttpResponse
-from .query_samples import insert_sample_data, get_all_books, get_all_libraries, get_all_libranians
+from .query_samples import insert_sample_data, getAllBooks, get_all_libraries, get_all_libranians,get_all_authors
 from django.template import loader
-from .models import Library,Librarian,Author,Book
+from .models import Library,Book
+from django.contrib.auth.decorators import user_passes_test
 
 
 def display_all(request):
@@ -15,24 +16,26 @@ def display_all(request):
         print('Sample data inserted successfully.')
     else:
         print('Sample data insertion failed or already exists.')
-    books = get_all_books()
+    books = getAllBooks()
     libraries = get_all_libraries()
     librarians = get_all_libranians()
-    template = loader.get_template('index.html')
+    authors = get_all_authors()
+    # template = loader.get_template('index.html')
     context = {
         'books': books,
         'libraries': libraries,
         'librarians': librarians,
+        'authors': authors,
     }
-    return HttpResponse(template.render(context, request))
+    return render(request,'library_detail.html', context)
 
 def list_books(request):
     books = Book.objects.all().values()
-    template = loader.get_template('./list_books.html')
+    # template = loader.get_template('list_books.html')
     context = {
         'books': books,
     }   
-    return HttpResponse(template.render(context, request))
+    return render(request,'relationship_app/list_books.html',context)
 
 class LibraryDetailView(DetailView):
     """Display details for a specific library and its books."""
@@ -42,8 +45,8 @@ class LibraryDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Optional: prefetch related books for performance
-        context['books'] = self.object.books.select_related('author').all()
-        template = loader.get_template('./library_detail.html')
+        context['books'] = self.context_object_name.object.books.select_related('author').all()
+        template = loader.get_template('relationship_app/library_detail.html')
         return HttpResponse(template.render(context,self.request))
 
 def register_view(request):
@@ -91,3 +94,28 @@ def logout_view(request):
     """Handle user logout."""
     logout(request)
     return render(request, 'relationship_app/logout.html')
+
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+
+# Views for each role
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
+
+
