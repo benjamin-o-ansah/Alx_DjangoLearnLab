@@ -1,10 +1,11 @@
 from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render
 from django.db.models import Q
 from .models import Book
 from .forms import SearchForm
+from .forms import ExampleForm
+
+
 
 def book_list(request):
     form = SearchForm(request.GET or None)
@@ -22,3 +23,14 @@ def book_list(request):
         'books': books,
         'form': form
     })
+
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # process data safely
+            return render(request, 'bookshelf/form_success.html', {'form': form})
+    else:
+        form = ExampleForm()
+
+    return render(request, 'bookshelf/form_example.html', {'form': form})
