@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project_api.wsgi.application'
+WSGI_APPLICATION = 'api_project.wsgi.application'
 
 
 # Database
