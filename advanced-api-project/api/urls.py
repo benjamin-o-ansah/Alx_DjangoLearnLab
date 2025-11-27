@@ -1,16 +1,37 @@
 # api/urls.py
 
 from django.urls import path
-from .views import BookListCreateAPIView, BookRetrieveUpdateDestroyAPIView
+from .views import (BookListAPIView, 
+    BookRetrieveAPIView, 
+    BookCreateAPIView,
+    BookUpdateAPIView,
+    BookDeleteAPIView)
 
 urlpatterns = [
-    # Endpoint for List (GET) and Create (POST)
+    # 1. List View (GET)
     path('books/', 
-         BookListCreateAPIView.as_view(), 
-         name='book-list-create'),
+         BookListAPIView.as_view(), 
+         name='book-list'),
 
-    # Endpoint for Retrieve (GET), Update (PUT/PATCH), and Destroy (DELETE)
+    # 2. Detail View (GET)
     path('books/<int:pk>/', 
-         BookRetrieveUpdateDestroyAPIView.as_view(), 
-         name='book-detail-update-destroy'),
+         BookRetrieveAPIView.as_view(), 
+         name='book-detail'),
+    
+    # --- New Dedicated Paths ---
+    
+    # 3. Create View (POST)
+    path('books/create/', 
+         BookCreateAPIView.as_view(), 
+         name='book-create'),
+
+    # 4. Update View (PUT/PATCH)
+    path('books/<int:pk>/update/', 
+         BookUpdateAPIView.as_view(), 
+         name='book-update'),
+    
+    # 5. Delete View (DELETE)
+    path('books/<int:pk>/delete/', 
+         BookDeleteAPIView.as_view(), 
+         name='book-delete'),
 ]
