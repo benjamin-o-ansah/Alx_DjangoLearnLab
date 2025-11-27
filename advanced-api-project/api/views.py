@@ -60,7 +60,7 @@
 from rest_framework import generics, permissions, mixins
 from .models import Book
 from .serializers import BookSerializer
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
 # --- Combined Views (Keep for List/Retrieve) ---
 
 class BookListAPIView(mixins.ListModelMixin,
@@ -68,7 +68,7 @@ class BookListAPIView(mixins.ListModelMixin,
     """Handles listing all books (GET) at /api/books/."""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -78,7 +78,7 @@ class BookRetrieveAPIView(mixins.RetrieveModelMixin,
     """Handles retrieving a single book (GET) at /api/books/<pk>/."""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -91,7 +91,7 @@ class BookCreateAPIView(mixins.CreateModelMixin,
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     # Requires authentication to create a book
-    permission_classes = [permissions.IsAuthenticated] 
+    permission_classes = [IsAuthenticated] 
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -102,7 +102,7 @@ class BookUpdateAPIView(mixins.UpdateModelMixin,
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     # Requires authentication to update a book
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -116,7 +116,7 @@ class BookDeleteAPIView(mixins.DestroyModelMixin,
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     # Requires authentication to delete a book
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
