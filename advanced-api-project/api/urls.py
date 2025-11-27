@@ -26,12 +26,12 @@ urlpatterns = [
          name='book-create'),
 
     # 4. Update View (PUT/PATCH)
-    path('books/<int:pk>/update/', 
+    path('books/update/', 
          BookUpdateAPIView.as_view(), 
          name='book-update'),
     
     # 5. Delete View (DELETE)
-    path('books/<int:pk>/delete/', 
+    path('books/delete/', 
          BookDeleteAPIView.as_view(), 
          name='book-delete'),
 ]
