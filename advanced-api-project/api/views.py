@@ -1,65 +1,59 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, mixins
 from .models import Book
 from .serializers import BookSerializer
 
-# --- Book List and Create View (ListCreateAPIView) ---
-class BookListCreateAPIView(generics.ListCreateAPIView):
-    """
-    Handles GET (list all books) and POST (create a new book) requests.
-    
-    Configuration:
-    - queryset: Defines the set of books to retrieve.
-    - serializer_class: Specifies the BookSerializer for data handling.
-    
-    Permissions:
-    - GET (List): Allowed by anyone (IsAuthenticatedOrReadOnly).
-    - POST (Create): Restricted to authenticated users only.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    
-    # Custom Permission Setup:
-    # Allows read operations (GET, HEAD, OPTIONS) for unauthenticated users,
-    # but write operations (POST, PUT, PATCH, DELETE) only for authenticated users.
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
-    # Custom Behavior: Associate the Book with the currently logged-in Author/User.
-    # Note: Assuming a one-to-one link between User and Author model. 
-    # For simplicity here, we'll assign the Author based on the request user's ID.
-    # A more robust solution would involve linking the User model to the Author model.
-    # For now, we will assume the request data includes the 'author' ID.
-    # We will rely on the serializer's `read_only_fields = ['author']` setting 
-    # and not override `perform_create` here to keep it simple, letting the client 
-    # provide the author ID during creation (for unauthenticated scenarios).
-    # If the author was determined by the user, we would use:
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user.author)
-    
+# --- DRF Generic Views using Mixins for demonstration ---
 
-# --- Book Detail View (RetrieveUpdateDestroyAPIView) ---
-class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+# 1. Book List and Create View (Equivalent to ListView + CreateView)
+class BookListCreateAPIView(mixins.ListModelMixin,
+                            mixins.CreateModelMixin,
+                            generics.GenericAPIView):
     """
-    Handles GET (retrieve single book), PUT (update), PATCH (partial update), 
-    and DELETE (destroy) requests for a specific book by its primary key (pk).
+    Handles listing all books (GET) and creating a new book (POST).
+    This combines the functionality of Django's ListView and CreateView for an API.
     
-    Configuration:
-    - queryset: Required to perform lookups.
-    - serializer_class: Specifies the BookSerializer.
-    - lookup_field: Defaults to 'pk' but can be changed (e.g., 'slug').
-    
-    Permissions:
-    - GET (Retrieve): Allowed by anyone (IsAuthenticatedOrReadOnly).
-    - PUT/PATCH (Update) & DELETE (Destroy): Restricted to authenticated users only.
+    Permissions: Read access for all users, Write access for authenticated users.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    
-    # Custom Permission Setup (same as list/create view):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-    # Customization: Restricting Update/Delete to the book's author (optional, but good practice).
-    # For simplicity, we stick to the IsAuthenticatedOrReadOnly global check here.
-    # A custom permission class (e.g., IsOwnerOrReadOnly) would be required for author restriction.
+    def get(self, request, *args, **kwargs):
+        # Calls ListModelMixin.list()
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Calls CreateModelMixin.create()
+        return self.create(request, *args, **kwargs)
+
+
+# 2. Book Detail, Update, and Destroy View (Equivalent to DetailView + UpdateView + DeleteView)
+class BookRetrieveUpdateDestroyAPIView(mixins.RetrieveModelMixin,
+                                     mixins.UpdateModelMixin,
+                                     mixins.DestroyModelMixin,
+                                     generics.GenericAPIView):
+    """
+    Handles retrieving (GET), updating (PUT/PATCH), and deleting (DELETE) a single book.
+    This combines the functionality of Django's DetailView, UpdateView, and DeleteView for an API.
+
+    Permissions: Read access for all users, Write access for authenticated users.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get(self, request, *args, **kwargs):
+        # Calls RetrieveModelMixin.retrieve()
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        # Calls UpdateModelMixin.update()
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        # Calls UpdateModelMixin.partial_update()
+        return self.partial_update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        # Calls DestroyModelMixin.destroy()
+        return self.destroy(request, *args, **kwargs)
