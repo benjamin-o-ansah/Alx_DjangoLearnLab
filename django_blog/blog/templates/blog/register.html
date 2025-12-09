@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>Join Our Community</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            {{ form.as_p }}
+            
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+        
+        <small class="text-muted">
+            Already have an account? <a href="{% url 'login' %}">Log In</a>
+        </small>
+    </div>
+{% endblock content %}

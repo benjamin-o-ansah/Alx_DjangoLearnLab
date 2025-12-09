@@ -52,6 +52,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_blog.urls'
 
+# URL to redirect to after successful login (default is /accounts/profile/)
+# I'll use the root URL ('/') or a specific home page view.
+LOGIN_REDIRECT_URL = '/' 
+
+# URL to redirect to after successful logout
+LOGOUT_REDIRECT_URL = '/' 
+
+# URL to redirect to when a user needs to log in (used by @login_required decorator)
+LOGIN_URL = 'login'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -76,12 +86,12 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django_blog_db',
-        'USER': 'my_db_user',
+        'USER': 'postgres',
         'PASSWORD': 'password12345',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '5432',
     }
 }
 
