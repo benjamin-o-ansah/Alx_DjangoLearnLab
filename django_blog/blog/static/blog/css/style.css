@@ -8,15 +8,45 @@ body {
       font-family: var(--font-family-base);
       margin: 0;
       padding: 0;
-      background-color: #3a73ac;
+      background-color: #ffffff;
+      margin:10px;
+
     }
 
 .site-header {
       background-color: var(--primary-color);
-      
+      padding:10px;
+      display: flex;
+      justify-content: end;
     }
 .nav-bar a {
       color: white;
       margin-right: calc(var(--spacing-unit) / 2);
       text-decoration: none;
     }   
+
+.nav-bar{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.nav-links{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+.site-footer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.sub-button{
+    margin-top:20px;
+    font-size: 12px;
+}
+
+.anchor{
+    margin-left:5px;
+}
