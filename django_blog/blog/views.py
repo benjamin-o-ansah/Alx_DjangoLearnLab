@@ -16,3 +16,10 @@ def register(request):
     
     context = {'form': form}
     return render(request, 'blog/register.html', context)
+
+def home(request):
+    """
+    Renders the main landing page of the blog.
+    """
+    # We will pass an empty context for now, but you could pass Post objects here later.
+    return render(request, 'blog/home.html', {})

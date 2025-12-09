@@ -1,0 +1,22 @@
+:root {
+      --primary-color: #007bff;
+      --font-family-base: 'Arial', sans-serif;
+      --spacing-unit: 16px;
+    }
+
+body {
+      font-family: var(--font-family-base);
+      margin: 0;
+      padding: 0;
+      background-color: #3a73ac;
+    }
+
+.site-header {
+      background-color: var(--primary-color);
+      
+    }
+.nav-bar a {
+      color: white;
+      margin-right: calc(var(--spacing-unit) / 2);
+      text-decoration: none;
+    }   
