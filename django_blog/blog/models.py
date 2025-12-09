@@ -11,6 +11,18 @@ class Post(models.Model):
         on_delete=models.CASCADE  
     )
 
-
     def __str__(self):
         return self.title
+
+class Profile(models.Model):
+    # One-to-One link to the built-in User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    # Custom Fields
+    bio = models.TextField(max_length=500, blank=True)
+    
+    # Requires 'Pillow' library to handle images (pip install Pillow)
+    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'

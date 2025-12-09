@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def register(request):
@@ -23,3 +24,29 @@ def home(request):
     """
     # We will pass an empty context for now, but you could pass Post objects here later.
     return render(request, 'blog/home.html', {})
+
+@login_required 
+def profile(request):
+    if request.method == 'POST':
+        # Instantiate both forms with POST data and the existing instance data
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES, # Pass files data for the profile picture
+                                   instance=request.user.profile)
+        
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile') # Redirect to GET request to avoid resubmission on refresh
+            
+    else:
+        # Instantiate forms with current user data for GET request
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+    return render(request, 'blog/profile.html', context)

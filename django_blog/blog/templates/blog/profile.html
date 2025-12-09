@@ -7,20 +7,27 @@
     <div class="profile-container">
         <h2>Profile: {{ user.username }}</h2>
         
+        <img class="profile-img" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+        
         <div class="profile-details">
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>First Name:</strong> {{ user.first_name }}</p>
-            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-            <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+            <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
         </div>
 
         <div class="profile-update-section">
             <h3>Update Information</h3>
+            
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                {{ u_form.as_p }} 
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">User Info</legend>
+                    {{ u_form.as_p }} 
+                </fieldset>
+                
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Profile Info</legend>
+                    {{ p_form.as_p }} 
+                </fieldset>
                 
                 <button type="submit" class="btn-primary">Save Changes</button>
             </form>
