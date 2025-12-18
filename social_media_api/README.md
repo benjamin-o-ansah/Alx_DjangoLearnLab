@@ -1,6 +1,6 @@
 # Social Media API Documentation
 
-This API allows users to register, login, manage profiles, create posts, and comment on posts. Built with Django and Django REST Framework (DRF).
+This API allows users to register, login, manage profiles, create posts, comment on posts, follow other users, and view an aggregated feed. Built with Django and Django REST Framework (DRF).
 
 ---
 
@@ -86,6 +86,38 @@ All protected endpoints require **Token Authentication**.
 
 ---
 
+## **Follow/Unfollow Users**
+
+### 1. Follow a User
+
+**Endpoint:** `/accounts/follow/<user_id>/`
+
+* Method: POST
+* Header: `Authorization: Token <token>`
+* Response:
+
+```json
+{
+  "detail": "You are now following jane"
+}
+```
+
+### 2. Unfollow a User
+
+**Endpoint:** `/accounts/unfollow/<user_id>/`
+
+* Method: POST
+* Header: `Authorization: Token <token>`
+* Response:
+
+```json
+{
+  "detail": "You have unfollowed jane"
+}
+```
+
+---
+
 ## **Posts API**
 
 ### 1. List All Posts
@@ -128,14 +160,11 @@ All protected endpoints require **Token Authentication**.
 }
 ```
 
-* Response: Returns the created post with author and comments.
-
 ### 3. Retrieve a Post
 
 **Endpoint:** `/posts/<post_id>/`
 
 * Method: GET
-* Response includes all post fields and nested comments.
 
 ### 4. Update a Post
 
@@ -144,14 +173,6 @@ All protected endpoints require **Token Authentication**.
 * Method: PUT/PATCH
 * Header: `Authorization: Token <token>`
 * Only the author can update.
-* Body (JSON):
-
-```json
-{
-  "title": "Updated Title",
-  "content": "Updated content."
-}
-```
 
 ### 5. Delete a Post
 
@@ -171,20 +192,6 @@ All protected endpoints require **Token Authentication**.
 
 * Method: GET
 * Pagination available
-* Response:
-
-```json
-[
-  {
-    "id": 1,
-    "post": 1,
-    "author": "jane",
-    "content": "Great post!",
-    "created_at": "2025-12-18T12:10:00Z",
-    "updated_at": "2025-12-18T12:10:00Z"
-  }
-]
-```
 
 ### 2. Create a Comment
 
@@ -200,8 +207,6 @@ All protected endpoints require **Token Authentication**.
   "content": "This is my comment."
 }
 ```
-
-* Response: Returns the created comment.
 
 ### 3. Retrieve a Comment
 
@@ -227,12 +232,41 @@ All protected endpoints require **Token Authentication**.
 
 ---
 
-## **Notes & Tips**
+## **Feed API**
 
-* All POST, PUT, PATCH, DELETE endpoints require **Token Authentication**.
+### Get Feed of Followed Users
+
+**Endpoint:** `/feed/`
+
+* Method: GET
+* Header: `Authorization: Token <token>`
+* Returns posts from users that the current user follows, ordered by most recent.
+* Response example:
+
+```json
+[
+  {
+    "id": 5,
+    "author": "jane",
+    "title": "New Post",
+    "content": "Hello followers!",
+    "created_at": "2025-12-18T12:00:00Z",
+    "updated_at": "2025-12-18T12:00:00Z",
+    "comments": []
+  }
+]
+```
+
+---
+
+## **Notes & Best Practices**
+
+* Users **cannot follow themselves**.
+* Protected endpoints require **Token Authentication**.
 * Pagination defaults to 10 items per page.
 * Use `search` query parameter on `/posts/` to filter posts by title or content.
-* Always include `Authorization: Token <token>` in headers for protected endpoints.
+* Only authors can edit or delete their posts/comments.
+* Use the same token obtained from login/registration for all authenticated requests.
 
 ---
 
@@ -241,11 +275,12 @@ All protected endpoints require **Token Authentication**.
 1. Register user → receive token
 2. Login user → receive token
 3. GET profile → verify user info
-4. POST new post → token required
-5. GET posts → list posts
-6. POST comment → token required
-7. GET posts/<post_id>/ → see nested comments
+4. Follow another user → `/accounts/follow/<user_id>/`
+5. Create posts → `/posts/`
+6. Comment on posts → `/comments/`
+7. View feed → `/feed/`
 8. Update/delete posts or comments → only by author
+9. Unfollow a user → `/accounts/unfollow/<user_id>/`
 
 ---
 
