@@ -7,7 +7,8 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import CustomUser
 from .serializers import RegisterSerializer, LoginSerializer, UserProfileSerializer
 # Create your views here.
-User = CustomUser()
+# User = get_user_model()
+User = CustomUser
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
