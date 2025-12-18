@@ -259,6 +259,64 @@ All protected endpoints require **Token Authentication**.
 
 ---
 
+## **Likes API**
+
+### Like a Post
+
+**Endpoint:** `/posts/<post_id>/like/`
+
+* Method: POST
+* Header: `Authorization: Token <token>`
+* Response:
+
+```json
+{
+  "detail": "Post liked successfully."
+}
+```
+
+### Unlike a Post
+
+**Endpoint:** `/posts/<post_id>/unlike/`
+
+* Method: POST
+* Header: `Authorization: Token <token>`
+* Response:
+
+```json
+{
+  "detail": "Post unliked successfully."
+}
+```
+
+---
+
+## **Notifications API**
+
+### View Notifications
+
+**Endpoint:** `/notifications/`
+
+* Method: GET
+* Header: `Authorization: Token <token>`
+* Returns a list of notifications related to the user (likes, comments, follows).
+* Response example:
+
+```json
+[
+  {
+    "id": 1,
+    "actor": "jane",
+    "verb": "liked your post",
+    "target": "My First Post",
+    "is_read": false,
+    "timestamp": "2025-12-18T12:00:00Z"
+  }
+]
+```
+
+---
+
 ## **Notes & Best Practices**
 
 * Users **cannot follow themselves**.
@@ -289,3 +347,75 @@ All protected endpoints require **Token Authentication**.
 * Postman or Insomnia for manual API testing.
 * `curl` for command-line testing.
 * Include token in `Authorization` header for authenticated requests.
+
+---
+
+## 🚀 Deployment Notes (Production)
+
+### Procfile Configuration
+
+To run this Django REST API in production, a **Procfile** is required. This file tells the hosting platform how to start the application.
+
+Create a file named **`Procfile`** (no extension) in the project root:
+
+```
+web: gunicorn social_media_api.wsgi
+```
+
+#### Explanation
+
+* **web** → Defines a web process that handles HTTP requests
+* **gunicorn** → A production-grade WSGI server
+* **social_media_api.wsgi** → The Django WSGI entry point
+
+Gunicorn loads the Django application using the `wsgi.py` file and serves it to the internet.
+
+### Requirements
+
+Ensure Gunicorn is installed and included in `requirements.txt`:
+
+```
+gunicorn
+```
+
+### Database Configuration (PostgreSQL)
+
+This project uses **PostgreSQL** via `dj-database-url`.
+
+The database is configured using a single environment variable:
+
+```
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB_NAME
+```
+
+Django automatically parses this value into engine, name, user, password, host, and port.
+
+### Environment Variables
+
+Common production environment variables:
+
+```
+DEBUG=False
+SECRET_KEY=your-secret-key
+DATABASE_URL=postgresql://...
+ALLOWED_HOSTS=your-domain.com
+```
+
+### Static Files
+
+Before deployment, collect static files:
+
+```
+python manage.py collectstatic
+```
+
+### Deployment Checklist
+
+* DEBUG set to False
+* ALLOWED_HOSTS configured
+* PostgreSQL database connected
+* Procfile present
+* Gunicorn installed
+* Static files collected
+
+---

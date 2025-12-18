@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
-from django.contrib.auth import CustomUser
+from django.contrib.auth import customUser
 from .serializers import RegisterSerializer, LoginSerializer, UserProfileSerializer
 # Create your views here.
 # User = get_user_model()
-User = CustomUser
+# User = CustomUser
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
