@@ -1,0 +1,8 @@
+<!-- blog/post_form.html -->
+<h2>{{ view.object|default:"Create Post" }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
