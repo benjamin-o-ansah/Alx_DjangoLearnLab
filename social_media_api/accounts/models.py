@@ -8,7 +8,7 @@ class User(AbstractUser):
     followers = models.ManyToManyField(
     'self',
     symmetrical=False,
-    related_name='following',
+    related_name='following_users',
     blank=True
     )
 
