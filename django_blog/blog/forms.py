@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'profile_picture']
+        fields = ["username", "email"]
 
 class UserUpdateForm(forms.ModelForm):
     # Make email a visible field
@@ -25,3 +25,10 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name'] # Add more base
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1", "password2"]
