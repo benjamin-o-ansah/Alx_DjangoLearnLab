@@ -1,14 +1,26 @@
-<!-- blog/post_detail.html -->
-<h1>{{ post.title }}</h1>
+<hr>
+<h3>Comments</h3>
 
-<p>{{ post.content }}</p>
-<small>By {{ post.author }} on {{ post.created_at }}</small>
+{% for comment in post.comments.all %}
+    <div>
+        <p>{{ comment.content }}</p>
+        <small>
+            By {{ comment.author }} | {{ comment.created_at }}
+        </small>
 
-{% if user == post.author %}
-    <br>
-    <a href="{% url 'post-update' post.pk %}">Edit</a>
-    <a href="{% url 'post-delete' post.pk %}">Delete</a>
+        {% if user == comment.author %}
+            <br>
+            <a href="{% url 'comment-update' comment.pk %}">Edit</a>
+            <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+        {% endif %}
+    </div>
+    <hr>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <a href="{% url 'comment-create' post.pk %}">Add Comment</a>
+{% else %}
+    <p><a href="{% url 'login' %}">Login</a> to comment.</p>
 {% endif %}
-
-<br>
-<a href="{% url 'post-list' %}">Back to Posts</a>
