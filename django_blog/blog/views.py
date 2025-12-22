@@ -11,7 +11,8 @@ from django.views.generic import (
     DeleteView
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post,Comment
+from .models import Post,Comment,Tag
+from django.db.models import Q
 
 # Create your views here.
 # def register(request):
@@ -159,3 +160,29 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse("post-detail", kwargs={"pk": self.object.post.pk})
+
+def search_view(request):
+    query = request.GET.get("q", "")
+    results = []
+
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(
+        request,
+        "blog/search_results.html",
+        {"query": query, "results": results}
+    )
+
+def posts_by_tag(request, tag_name):
+    tag = Tag.objects.get(name=tag_name)
+    posts = tag.posts.all()
+    return render(
+        request,
+        "blog/posts_by_tag.html",
+        {"tag": tag, "posts": posts}
+    )
